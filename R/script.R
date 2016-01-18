@@ -14,3 +14,5 @@ for(i in 1:(nCommunities - 1)){
     D22_PW[i, j] <- D22_PW[j, i] <- main(data[, c(i, j)], boot = 1000)[1]
   }
 }
+
+write.csv(D22_PW, file = "pairwise_D22.csv")
