@@ -64,3 +64,94 @@ D2n_equ <- function(x, method = "MVUE") {
 }
 
 
+#' @name bootstrapJostD
+#' @title Calculate Jost's D, Mean and SE by bootstrap
+#' @export
+bootstrapJostD <- function(x, boot = 1000L){
+  method <- "MVUE"
+  nCommunities <- ncol(x)
+  nPerCommunity <- colSums(x)
+
+  p_hat <- sapply(1:nCommunities, function(j){ x[, j] / nPerCommunity[j] })
+
+  D2n <- D2n_equ(x, method = "MVUE")
+
+  if(D2n < 0){
+    method <- "MLE"
+  } else {
+    if(D2n > 0){
+      method <- "MVUE"
+    } else {
+      stop("ERROR: D2n is neighter higher or lower than zero!")
+    }
+  }
+
+  bootD2n <- rep(0, boot)
+  D2n <- D2n_equ(x, method = method)
+
+  for(rep in 1:boot){
+    bootSample <- sapply(1:nCommunities, function(j){
+      rmultinom(1, nPerCommunity[j], p_hat[, j])
+    })
+    bootD2n[rep] <-D2n_equ(bootSample, method = method)
+  }
+
+  D2n_se <- sd(bootD2n)
+  result <- c(Mean = D2n, SE = D2n_se)
+  return(result)
+}
+
+
+#' @name pairwiseD22
+#' @title Calculate Pairwise Jost's D.
+#' @description Calculate Pairwise Jost's D, optionally bootstrap to calculate mean and SD.
+#' @export
+pairwiseD22 <- function(data, boot = NULL){
+
+  nCommunities <- ncol(data)
+  mat <- matrix(0, nCommunities, nCommunities)
+
+  # Use a Lexical Scope trick!
+  # Don't do this sort of thing unless you understand
+  # how R searches for things, and what lexical scope is,
+  # and how R's 'superassignment operator': '<<-' works,
+  # compared to the regular assignment operator: '<-'
+
+  # BEGIN LEXICAL SCOPE TRICK
+  if(!is.null(boot)){
+
+    # If you want to estimate a bootstrap in pairwise calcs,
+    # set up output object, and create function which does stuff.
+
+    out <- list(Mean = mat, SE = mat)
+
+    doCalc <- function() {
+      ans <- bootstrapJostD(data[, c(i, j)], boot = boot)
+      out$Mean[i, j] <<- out$Mean[j, i] <<- ans[1]
+      out$SE[i, j] <<- out$SE[j, i] <<- ans[2]
+    }
+
+  } else {
+
+    # If you DON'T want to estimate a bootstrap in pairwise calcs,
+    # set up output object, and create function which does stuff.
+
+    out <- mat
+
+    doCalc <- function() {
+      ans <- D2n_equ(data[, c(i, j)])
+      out[i, j] <<- out[j, i] <<- ans
+    }
+
+  }
+  # END LEXICAL SCOPE TRICK
+
+  for(i in 1:(nCommunities - 1)){
+    for(j in (i + 1):nCommunities){
+      doCalc()
+    }
+  }
+
+  return(out)
+
+}

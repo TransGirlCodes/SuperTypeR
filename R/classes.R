@@ -1,3 +1,0 @@
-setClass("SuperType",
-         representation =
-           list()
