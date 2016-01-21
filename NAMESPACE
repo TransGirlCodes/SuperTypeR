@@ -2,4 +2,5 @@
 
 export(D2n_equ)
 export(bootstrapJostD)
+export(countSuperTypes)
 export(pairwiseD22)
