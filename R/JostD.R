@@ -1,5 +1,5 @@
-
-
+#' @import dplyr
+NULL
 
 
 #' @name MVUE

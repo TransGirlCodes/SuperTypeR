@@ -4,6 +4,8 @@
 \alias{countSuperTypes}
 \title{Count the number of each supertype in each population.}
 \usage{
-countSuperTypes(samples)
+countSuperTypes(obs)
+
+countSuperTypes(obs)
 }
 
