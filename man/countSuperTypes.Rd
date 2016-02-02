@@ -2,9 +2,10 @@
 % Please edit documentation in R/SuperTypeCount.R
 \name{countSuperTypes}
 \alias{countSuperTypes}
+\alias{countSuperTypesPerPop}
 \title{Count the number of each supertype in each population.}
 \usage{
-countSuperTypes(obs)
+countSuperTypesPerPop(samples)
 
 countSuperTypes(obs)
 }

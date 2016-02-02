@@ -4,7 +4,7 @@
 #' @name countSuperTypes
 #' @title Count the number of each supertype in each population.
 #' @export
-countSuperTypes <- function(samples){
+countSuperTypesPerPop <- function(samples){
   countMatrix <- matrix(0,
                         nrow = length(unique(samples$Supertype)),
                         ncol = length(unique(samples$Site)))
@@ -26,7 +26,7 @@ countAlleles <- function(obs) {
   alleleCounts <- group_by(obs, Sample) %>%
     summarise(rep = n(), nAllele = n_distinct(Genotype))
 
-  repeated <- rep.int(alleleCounts$nAllele, times = alleleCounts$rep)
+  repeated <- rep.int(alleleCounts$nAllele, alleleCounts$rep)
 
   return(repeated)
 }
