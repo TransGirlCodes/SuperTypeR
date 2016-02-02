@@ -5,18 +5,16 @@
 #' @title Count the number of each supertype in each population.
 #' @export
 countSuperTypesPerPop <- function(samples){
-  sites <- samples$Site
-  sts <- samples$Super
+  samples[, 5] <- as.character(samples[, 5])
+  samples[, 2] <- as.character(samples[, 2])
   countMatrix <- matrix(0,
                         nrow = length(unique(samples$Supertype)),
                         ncol = length(unique(samples$Site)))
   colnames(countMatrix) <- as.character(unique(samples$Site))
   rownames(countMatrix) <- as.character(unique(samples$Supertype))
-  updateCountMatrix <- function(sampleRow){
-    countMatrix[as.character(sampleRow[5]), as.character(sampleRow[2])] <<-
-      countMatrix[as.character(sampleRow[5]), as.character(sampleRow[2])] + 1
+  for(i in 1:nrow(samples)){
+    countMatrix[samples[i, 5], samples[i, 2]] <- countMatrix[samples[i, 5], samples[i, 2]] + 1
   }
-  apply(samples, 1, function(x){updateCountMatrix(x)})
   return(countMatrix)
 }
 
