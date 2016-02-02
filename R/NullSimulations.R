@@ -47,7 +47,11 @@ oneSimIter <- function(obs, desigs){
   newSTs <- assignSuperTypes(obs, rand_desigs)
   obs$Supertype <- newSTs
 
+  # Count the number of supertypes per population.
+  superTypeCounts <- countSuperTypesPerPop(obs)
 
+  # Calculate Pairwise Jost D.
+  return(pairwiseD22(superTypeCounts, boot = 1000))
 
 }
 
@@ -55,9 +59,7 @@ oneSimIter <- function(obs, desigs){
 #' @title Assign a supertype for each allele of each individual.
 #' @export
 assignSuperTypes <- function(obs, desigs){
-  idx <- apply(obs, 1, function(x) which(x[4] == desigs$Allele))
-  supertypes <- desigs$superType[idx]
-  return(supertypes)
+  return(apply(obs, 1, function(x) desigs$superType[which(x[4] == desigs$Allele)]))
 }
 
 
