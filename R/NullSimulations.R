@@ -1,15 +1,4 @@
 
-
-
-
-
-
-
-
-
-
-
-
 randomiseSupertypes <- function(desigs){
   # Extract data from the origional dataframe.
   alleles <- desigs[, 2:3]
@@ -30,16 +19,15 @@ randomiseSupertypes <- function(desigs){
 }
 
 
-nullSimulations <- function(obs, desigs){
-
-
-
-
-
+#' @name nullSimulations
+#' @title Generate Null Simulations using your data.
+#' @export
+nullSimulations <- function(obs, desigs, iter = 1000, boot = 1000){
+  return(lapply(1:iter, function(i){oneSimIter(obs, desigs, boot)}))
 }
 
 
-oneSimIter <- function(obs, desigs){
+oneSimIter <- function(obs, desigs, boot = 1000){
   # Randomise the supertype definitions
   rand_desigs <- randomiseSupertypes(desigs)
 
@@ -51,9 +39,9 @@ oneSimIter <- function(obs, desigs){
   superTypeCounts <- countSuperTypesPerPop(obs)
 
   # Calculate Pairwise Jost D.
-  return(pairwiseD22(superTypeCounts, boot = 1000))
-
+  return(pairwiseD22(superTypeCounts))
 }
+
 
 #' @name assignSuperTypes
 #' @title Assign a supertype for each allele of each individual.
