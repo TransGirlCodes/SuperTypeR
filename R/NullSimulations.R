@@ -23,7 +23,9 @@ randomiseSupertypes <- function(desigs){
 #' @title Generate Null Simulations using your data.
 #' @export
 nullSimulations <- function(obs, desigs, iter = 1000, boot = NULL){
-  return(lapply(1:iter, function(i){oneSimIter(obs, desigs, boot)}))
+  return(lapply(1:iter, function(i){
+    apply(oneSimIter(obs, desigs, boot), 2, mean)
+    }))
 }
 
 
