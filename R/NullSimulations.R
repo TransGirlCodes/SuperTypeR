@@ -22,12 +22,12 @@ randomiseSupertypes <- function(desigs){
 #' @name nullSimulations
 #' @title Generate Null Simulations using your data.
 #' @export
-nullSimulations <- function(obs, desigs, iter = 1000, boot = 1000){
+nullSimulations <- function(obs, desigs, iter = 1000, boot = NULL){
   return(lapply(1:iter, function(i){oneSimIter(obs, desigs, boot)}))
 }
 
 
-oneSimIter <- function(obs, desigs, boot = 1000){
+oneSimIter <- function(obs, desigs, boot = NULL){
   # Randomise the supertype definitions
   rand_desigs <- randomiseSupertypes(desigs)
 
@@ -39,7 +39,7 @@ oneSimIter <- function(obs, desigs, boot = 1000){
   superTypeCounts <- countSuperTypesPerPop(obs)
 
   # Calculate Pairwise Jost D.
-  return(pairwiseD22(superTypeCounts))
+  return(pairwiseD22(superTypeCounts, boot = boot))
 }
 
 
