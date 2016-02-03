@@ -110,8 +110,7 @@ pairwiseD22 <- function(data, boot = NULL){
 
   nCommunities <- ncol(data)
   mat <- matrix(0, nCommunities, nCommunities)
-  colnames(mat) <- colnames(data)
-  rownames(mat) <- rownames(data)
+  coms <- colnames(mat) <- rownames(mat) <- colnames(data)
 
   # Use a Lexical Scope trick!
   # Don't do this sort of thing unless you understand
@@ -128,9 +127,9 @@ pairwiseD22 <- function(data, boot = NULL){
     out <- list(Mean = mat, SE = mat)
 
     doCalc <- function() {
-      ans <- bootstrapJostD(data[, c(i, j)], boot = boot)
-      out$Mean[i, j] <<- out$Mean[j, i] <<- ans[1]
-      out$SE[i, j] <<- out$SE[j, i] <<- ans[2]
+      ans <- bootstrapJostD(data[, c(coms[i], coms[j])], boot = boot)
+      out$Mean[coms[i], coms[j]] <<- out$Mean[coms[j], coms[i]] <<- ans[1]
+      out$SE[coms[i], coms[j]] <<- out$SE[coms[j], coms[i]] <<- ans[2]
     }
 
   } else {
@@ -141,8 +140,8 @@ pairwiseD22 <- function(data, boot = NULL){
     out <- mat
 
     doCalc <- function() {
-      ans <- D2n_equ(data[, c(i, j)])
-      out[i, j] <<- out[j, i] <<- ans
+      ans <- D2n_equ(data[, c(coms[i], coms[j])])
+      out[coms[i], coms[j]] <<- out[coms[j], coms[i]] <<- ans
     }
 
   }
