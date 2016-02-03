@@ -110,6 +110,8 @@ pairwiseD22 <- function(data, boot = NULL){
 
   nCommunities <- ncol(data)
   mat <- matrix(0, nCommunities, nCommunities)
+  colnames(mat) <- colnames(data)
+  rownames(mat) <- rownames(data)
 
   # Use a Lexical Scope trick!
   # Don't do this sort of thing unless you understand
